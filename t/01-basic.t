@@ -19,6 +19,7 @@ is( $hex->encode( 10 ), 'a' );
 is( $hex->decode( 'a' ), 10 );
 is( $hex->encode( 100 ), '64' );
 is( $hex->decode( '64' ), 100 );
+is( $hex->encode( 1234 ), '4d2' );
 is( Convert::AnyBase->decimal->encode( 10 ), '10' );
 is( Convert::AnyBase->decimal->encode( 100 ), '100' );
 

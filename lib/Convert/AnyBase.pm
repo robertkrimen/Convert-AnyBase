@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-Convert::AnyBase -
+Convert::AnyBase - Encode/decode to and from an arbitrary base
 
 =head1 VERSION
 
@@ -14,6 +14,27 @@ Version 0.01
 =cut
 
 our $VERSION = '0.01';
+
+=head1 SYNOPSIS
+
+    use Convert::AnyBase
+
+    # A hex encoder/decoder
+    my $hex = Convert::AnyBase->new( set => '0123456789abcdef', normalize => sub { lc } )
+    $hex->encode( 10 )  # a
+    $hex->encode( 100 ) # 64
+    $hex->decode( 4d2 ) # 1234
+
+    # A Crockford encoder/decoder (http://www.crockford.com/wrmg/base32.html)
+    Convert::AnyBase->new( set => ( join '', 0 .. 9, 'a' .. 'h', 'j', 'k', 'm', 'n', 'p' .. 't', 'v', 'w', 'x', 'y', 'z' ),
+        normalize => sub { s/[oO]/0/g; s/[iIlL]/1/g; lc }, # o, O => 0 / i, I, l, L => 1
+    )
+
+=head1 DESCRIPTION
+
+Convert::AnyBase is a tool for converting numbers to and from arbitrary symbol sets.
+
+=cut
 
 sub new {
     shift;
@@ -30,7 +51,7 @@ sub new {
     
     sub crockford {
         return $crockford ||= __PACKAGE__->new( set => ( join '', 0 .. 9, 'a' .. 'h', 'j', 'k', 'm', 'n', 'p' .. 't', 'v', 'w', 'x', 'y', 'z' ),
-            normalize => sub { s/[oO]/0/g; s/[iIlL]/1/g; $_ },
+            normalize => sub { s/[oO]/0/g; s/[iIlL]/1/g; lc },
         );
     }
 
